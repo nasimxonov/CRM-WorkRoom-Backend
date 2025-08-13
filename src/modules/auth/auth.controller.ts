@@ -4,8 +4,11 @@ import {
   HttpCode,
   HttpException,
   Post,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
+import { LoginAuthDto } from './dto/create-auth.dto';
 import { SendOtpDto } from './dto/send-otp.dto';
 import { VerifySmsCodeDto } from './dto/verify.sms.code.dto';
 
@@ -31,10 +34,31 @@ export class AuthController {
       throw new HttpException(error.message, error.status);
     }
   }
-  @Post()
-  async register() {}
-  @Post()
-  async login() {}
+
+  // @Post()
+  // async register(
+  //   @Body() createAuthDto: CreateAuthDto,
+  //   @Res({ passthrough: true }) res: Response,
+  // ) {
+  // }
+
+  @Post('login')
+  async login(
+    @Body() loginAuthDto: LoginAuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token = await this.authService.login(loginAuthDto);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      path: '/',
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: false,
+      sameSite: 'lax',
+    });
+
+    return { token };
+  }
   @Post()
   async logout() {}
 }
