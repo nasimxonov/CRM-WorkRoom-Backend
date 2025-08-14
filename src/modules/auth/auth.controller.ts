@@ -1,12 +1,15 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
+  Get,
   HttpCode,
   HttpException,
   Post,
+  Req,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/create-auth.dto';
 import { SendOtpDto } from './dto/send-otp.dto';
@@ -34,6 +37,12 @@ export class AuthController {
       throw new HttpException(error.message, error.status);
     }
   }
+  @Get('check')
+  async checkAuth(@Req() req: Request) {
+    const token = req.cookies['token'];
+    if (!token) return false;
+    return true;
+  }
 
   // @Post()
   // async register(
@@ -43,6 +52,7 @@ export class AuthController {
   // }
 
   @Post('login')
+  @HttpCode(200)
   async login(
     @Body() loginAuthDto: LoginAuthDto,
     @Res({ passthrough: true }) res: Response,
@@ -52,7 +62,7 @@ export class AuthController {
     res.cookie('token', token, {
       httpOnly: true,
       path: '/',
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 60 * 1000,
       secure: false,
       sameSite: 'lax',
     });

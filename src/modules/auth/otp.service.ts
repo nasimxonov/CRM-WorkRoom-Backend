@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, 
+  Injectable } from '@nestjs/common';
 import { RedisService } from 'src/core/database/redis.service';
 import { EskizService } from './eskiz.service';
 import generateOtp from 'src/utils/generate-otp';
