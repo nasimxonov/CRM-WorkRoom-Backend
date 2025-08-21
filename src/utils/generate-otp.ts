@@ -1,4 +1,4 @@
-import { generate } from 'otp-generator';
+import { generate } from "otp-generator";
 
 const generateOtp = () => {
   const otp = generate(4, {

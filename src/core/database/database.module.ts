@@ -1,7 +1,7 @@
-import { Global, Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { RedisService } from './redis.service';
-import { SeederService } from './seeders/seeder.service';
+import { Global, Module } from "@nestjs/common";
+import { PrismaService } from "./prisma.service";
+import { RedisService } from "./redis.service";
+import { SeederService } from "./seeders/seeder.service";
 @Global()
 @Module({
   imports: [],

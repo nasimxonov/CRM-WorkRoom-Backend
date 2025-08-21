@@ -1,4 +1,4 @@
-import { QuestionType } from '@prisma/client';
+import { QuestionType } from "@prisma/client";
 import {
   IsArray,
   IsBoolean,
@@ -6,7 +6,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator';
+} from "class-validator";
 
 interface IOptions {
   option_text: string;

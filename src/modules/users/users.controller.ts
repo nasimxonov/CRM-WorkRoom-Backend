@@ -26,10 +26,7 @@ export class UsersController {
 
   @Put()
   @UseInterceptors(FileInterceptor("file"))
-  async update(
-    @Req() req: Request,
-    @UploadedFile() file: Express.Multer.File
-  ) {
+  async update(@Req() req: Request, @UploadedFile() file: Express.Multer.File) {
     try {
       console.log("sorov keldi");
       return this.usersService.update(file);
@@ -37,5 +34,4 @@ export class UsersController {
       throw new HttpException(error.message, error.status);
     }
   }
-
 }
