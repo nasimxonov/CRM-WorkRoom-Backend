@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QuestionType {
+  text
+  select
+  radio
+  checkbox
+  button
+}
+
+model User {
+  id           String       @id @default(uuid())
+  position     String?
+  company      String?
+  location     String?
+  birth_date   DateTime?
+  phone_number String?      @unique
+  skype        String?
+  email        String?      @unique
+  username     String       @unique
+  password     String
+  fileName     String?
+  level        String?
+  UserMember   UserMember[]
+
+  @@map("users")
+}
+
+model UserProfileQuestions {
+  id            String                      @id @default(uuid())
+  question_text String                      @unique
+  question_type QuestionType
+  is_required   Boolean                     @default(false)
+  step_number   Int
+  options       QuestionOptions[]
+  answer        UserProfileQuestionAnswers?
+
+  @@map("user_profile_questions")
+}
+
+model QuestionOptions {
+  id           String               @id @default(uuid())
+  question_id  String
+  option_text  String
+  option_value String
+  question     UserProfileQuestions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+  @@map("question_options")
+}
+
+model UserProfileQuestionAnswers {
+  id             String                  @id @default(uuid())
+  question_id    String                  @unique
+  answer_text    String?
+  user_id        String
+  question       UserProfileQuestions    @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  answer_options SelectedAnswerOptions[]
+
+  @@map("user_profile_question_anwsers")
+}
+
+model SelectedAnswerOptions {
+  id        String                     @id @default(uuid())
+  answer_id String
+  option_id String
+  answer    UserProfileQuestionAnswers @relation(fields: [answer_id], references: [id], onDelete: Cascade)
+
+  @@unique([answer_id, option_id])
+  @@map("selected_answer_options")
+}
+
+model UserMember {
+  id         String  @id @default(uuid())
+  email      String
+  memberedId String?
+  user_id    String?
+  user       User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_members")
+}
